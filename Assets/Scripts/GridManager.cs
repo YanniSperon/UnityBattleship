@@ -8,26 +8,27 @@ public class GridManager : MonoBehaviour {
     const float zScale = 2; 
     public GameObject cellPrefab;
 
-    public BattleshipGrid createGrid() {
-        Vector3 position = new Vector3(0,0,100);
-        GameObject[,] cells = createCells(position, "localplayer");
+    public BattleshipGrid createGrid(string gridName, Vector3 position) {
+        GameObject[,] cells = createCells(gridName, position);
         BattleshipGrid grid = new BattleshipGrid(position, cells, gridWidth, gridHeight, zScale, xScale);
 
         return grid;
     }
 
-    GameObject[,] createCells(Vector3 startPosition, string playerName){
-        GameObject cellHolder = new GameObject("cells-"+playerName);
+    GameObject[,] createCells(string gridName, Vector3 startPosition){
+        GameObject cellHolder = new GameObject("cells-"+gridName);
         GameObject[,] cells = new GameObject[gridWidth, gridHeight];
 
         for (int x = 0; x < gridWidth; x++) {
             for (int y = 0; y < gridHeight; y++) {
-                Vector3 cellPosition = startPosition + new Vector3(x * xScale, 0, y * -zScale);
+                Vector3 cellPosition = new Vector3(x * xScale, 0, y * -zScale);
                 GameObject cell = Instantiate(cellPrefab, cellPosition, Quaternion.identity);
                 cell.transform.parent = cellHolder.transform;
                 cells[x, y] = cell;
             }
         }
+
+        cellHolder.transform.position = startPosition;
 
         return cells;
     }

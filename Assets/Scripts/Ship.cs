@@ -106,7 +106,6 @@ public class Ship {
     Vector3 getPositionOnBoard() {
         GameObject cellModel = this.grid.cellModels[this.position.x,this.position.y];
         Vector3 shipSize = this.shipMesh.transform.localScale;
-        // print(shipSize + " " + x + " " + y);
         Vector3 posOnBoard = cellModel.transform.position + new Vector3(0, 0, 0);//new Vector3((shipSize.x-xScale)/2, 0, -(shipSize.z-zScale)/2);
 
         return posOnBoard;
