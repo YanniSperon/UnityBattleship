@@ -1,5 +1,8 @@
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.Audio;
+using UnityEngine.UI;
+using static UnityEditor.PlayerSettings;
 
 public class AudioManager : MonoBehaviour
 {
@@ -39,14 +42,15 @@ public class AudioManager : MonoBehaviour
         }
         set
         {
-            if (Tracks.ContainsKey(_CurrentlyPlaying))
+            GameObject obj = null;
+            if (Tracks.TryGetValue(_CurrentlyPlaying, out obj))
             {
-                Tracks[_CurrentlyPlaying].SetActive(false);
+                obj.SetActive(false);
             }
             _CurrentlyPlaying = value;
-            if (Tracks.ContainsKey(_CurrentlyPlaying))
+            if (Tracks.TryGetValue(_CurrentlyPlaying, out obj))
             {
-                Tracks[_CurrentlyPlaying].SetActive(true);
+                obj.SetActive(true);
             }
         }
     }
@@ -66,5 +70,42 @@ public class AudioManager : MonoBehaviour
     {
         UpdateTracks();
         CurrentlyPlayingTrack = TrackToStartWith;
+    }
+
+    public void Start()
+    {
+        SetMasterVolume(10.0f);
+        SetMusicVolume(10.0f);
+        SetSFXVolume(10.0f);
+    }
+
+    public AudioMixer mixer;
+
+    public AudioMixerSnapshot paused;
+    public AudioMixerSnapshot unpaused;
+
+    public void Pause()
+    {
+        paused.TransitionTo(0.01f);
+    }
+
+    public void Unpause()
+    {
+        unpaused.TransitionTo(0.01f);
+    }
+
+    public void SetMasterVolume(float level)
+    {
+        mixer.SetFloat("MasterVolume", Mathf.Log10((level * 0.05f) + 0.0001f) * 40.0f);
+    }
+
+    public void SetMusicVolume(float level)
+    {
+        mixer.SetFloat("MusicVolume", Mathf.Log10((level * 0.05f) + 0.0001f) * 40.0f);
+    }
+
+    public void SetSFXVolume(float level)
+    {
+        mixer.SetFloat("SFXVolume", Mathf.Log10((level * 0.05f) + 0.0001f) * 40.0f);
     }
 }
