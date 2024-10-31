@@ -26,6 +26,23 @@ void setup() {
 }
 
 void loop() {
-  Serial.println("Touched:" + String(cap.touched()));
-  delay(50);
+  uint16_t touched = cap.touched(); // Get the touched data as a 16-bit number
+
+  // Convert the touched data into a 12-byte array
+  for (int i = 0; i < 12; i++) {
+    data[i] = (touched & (1 << i)) ? 1 : 0; // Check each bit, set data[i] to 1 if touched, otherwise 0
+  }
+  Serial.write(data, 12);
+  
+  // Print the 12-byte array in Serial Monitor
+  
+  //Serial.print("Touched: ");
+  //for (int i = 0; i < 12; i++) {
+  //  Serial.print(data[i] == 1 ? 1:0);
+  //  Serial.print(" ");
+  //}
+  //Serial.println();
+
+  //Serial.println("Touched:" + String(cap.touched()));
+  delay(500);
 }
